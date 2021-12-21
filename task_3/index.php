@@ -16,6 +16,7 @@ $db = new PDO('mysql:host=localhost;dbname=json_placeholder;', 'root', 'ridel769
 $json_users = file_get_contents('https://jsonplaceholder.typicode.com/users/');
 $json_posts = file_get_contents('https://jsonplaceholder.typicode.com/posts/');
 $json_comments = file_get_contents('https://jsonplaceholder.typicode.com/comments/');
+$json_albums = file_get_contents('https://jsonplaceholder.typicode.com/albums/');
 
 
 echo '<br/>';
@@ -36,10 +37,16 @@ $sql_comments = "INSERT INTO `comments` (`postId`,`id`,`name`,`email`,`body`)
                       VALUES (:postId, :id, :name, :email , :body)";
 $stm_comments = $db->prepare($sql_comments);
 
+//albums
+$sql_albums = "INSERT INTO `albums` (`userId`,`id`,`title`)
+                      VALUES (:userId, :id, :title )";
+$stm_albums = $db->prepare($sql_albums);
+
 // parse JSON
 $arr_users = json_decode($json_users, true);
 $arr_posts = json_decode($json_posts, true);
 $arr_comments = json_decode($json_comments, true);
+$arr_albums = json_decode($json_albums, true);
 
 
 $i = 0;
@@ -96,6 +103,23 @@ foreach ($arr_comments as $record) {
     var_dump($data_comments);
     // inserting a record
     $stm_comments->execute($data_comments);
+}
+
+//albums loop
+foreach ($arr_albums as $record) {
+
+    echo "==================Insert record " . $i ++ . "<br>";
+
+    $data_albums = array(
+        ':userId' => $record['userId'],
+        ':id' => $record['id'],
+        ':title' => $record['title'],
+        
+    );
+    
+    var_dump($data_albums);
+    // inserting a record
+    $stm_albums->execute($data_albums);
 }
 
 ?>
