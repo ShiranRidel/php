@@ -17,6 +17,7 @@ $json_users = file_get_contents('https://jsonplaceholder.typicode.com/users/');
 $json_posts = file_get_contents('https://jsonplaceholder.typicode.com/posts/');
 $json_comments = file_get_contents('https://jsonplaceholder.typicode.com/comments/');
 $json_albums = file_get_contents('https://jsonplaceholder.typicode.com/albums/');
+$json_photos = file_get_contents('https://jsonplaceholder.typicode.com/photos/');
 
 
 echo '<br/>';
@@ -42,12 +43,17 @@ $sql_albums = "INSERT INTO `albums` (`userId`,`id`,`title`)
                       VALUES (:userId, :id, :title )";
 $stm_albums = $db->prepare($sql_albums);
 
+//photos
+$sql_photos = "INSERT INTO `photos` (`albumId`,`id`,`title`,`url`,`thumbnailUrl`)
+                      VALUES (:albumId, :id, :title , :url, :thumbnailUrl)";
+$stm_photos = $db->prepare($sql_photos);
+
 // parse JSON
 $arr_users = json_decode($json_users, true);
 $arr_posts = json_decode($json_posts, true);
 $arr_comments = json_decode($json_comments, true);
 $arr_albums = json_decode($json_albums, true);
-
+$arr_photos = json_decode($json_photos, true);
 
 $i = 0;
 
@@ -120,6 +126,25 @@ foreach ($arr_albums as $record) {
     var_dump($data_albums);
     // inserting a record
     $stm_albums->execute($data_albums);
+}
+
+//photos loop
+foreach ($arr_photos as $record) {
+
+    echo "==================Insert record " . $i ++ . "<br>";
+
+    $data_photos = array(
+        ':albumId' => $record['albumId'],
+        ':id' => $record['id'],
+        ':title' => $record['title'],
+        ':url' => $record['url'],
+        ':thumbnailUrl' => $record['thumbnailUrl'],
+        
+    );
+    
+    var_dump($data_photos);
+    // inserting a record
+    $stm_photos->execute($data_photos);
 }
 
 ?>
