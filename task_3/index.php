@@ -14,20 +14,30 @@ $db = new PDO('mysql:host=localhost;dbname=json_placeholder;', 'root', 'ridel769
 
 // download json from url
 $json_users = file_get_contents('https://jsonplaceholder.typicode.com/users/');
+$json_posts = file_get_contents('https://jsonplaceholder.typicode.com/posts/');
 
 echo '<br/>';
-
+// users
 $sql_users = "INSERT INTO `users` (`id`,`name`,`username`,`email`)
                       VALUES (:id, :name, :username , :email)";
 $stm = $db->prepare($sql_users);
 
+echo '<br/>';
+
+//posts
+$sql_posts = "INSERT INTO `posts` (`userId`,`id`,`title`,`body`)
+                      VALUES (:userId, :id, :title , :body)";
+$stm1 = $db->prepare($sql_posts);
 
 
 // parse JSON
-$arr = json_decode($json_users, true);
+$arr_users = json_decode($json_users, true);
+$arr_posts = json_decode($json_posts, true);
+
 $i = 0;
 
-foreach ($arr as $record) {
+//users loop
+foreach ($arr_users as $record) {
 
     echo "==================Insert record " . $i ++ . "<br>";
 
@@ -40,10 +50,27 @@ foreach ($arr as $record) {
 
        
     );
-    
     var_dump($data);
     // inserting a record
     $stm->execute($data);
+}
+
+//posts loop
+foreach ($arr_posts as $record) {
+
+    echo "==================Insert record " . $i ++ . "<br>";
+
+    $data1 = array(
+        ':userId' => $record['userId'],
+        ':id' => $record['id'],
+        ':title' => $record['title'],
+        ':body' => $record['body'], 
+    );
+    
+    var_dump($data1);
+    // inserting a record
+    $stm1->execute($data1);
+
 }
 ?>
 
