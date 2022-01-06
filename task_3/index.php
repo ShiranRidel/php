@@ -38,7 +38,7 @@ $sql_comments = "INSERT INTO `comments` (`postId`,`id`,`name`,`email`,`body`)
                       VALUES (:postId, :id, :name, :email , :body)";
 $stm_comments = $db->prepare($sql_comments);
 
-//albums
+//albums 
 $sql_albums = "INSERT INTO `albums` (`userId`,`id`,`title`)
                       VALUES (:userId, :id, :title )";
 $stm_albums = $db->prepare($sql_albums);
